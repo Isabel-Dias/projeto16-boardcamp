@@ -81,7 +81,7 @@ async function putCustomer(req, res) {
             WHERE id = $5`,
             [name, phone, cpf, birthday, id]
         ) 
-        return res.sendStatus(201);
+        return res.sendStatus(200);
         
     } catch {
         return res.sendStatus(500);
