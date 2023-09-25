@@ -4,11 +4,12 @@ import { customerSchema } from "../schemas/customer.schema.js";
 async function getCustomers(req, res) {
     try {
         const customersList = await db.query(`
-                SELECT 
+                SELECT
+                    id, 
                     name,
                     phone,
                     cpf,
-                    TO_CHAR(birthday, 'YYYY-MM-DD')
+                    TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday
                 FROM 
                     customers;
             `)
@@ -25,10 +26,11 @@ async function getOneCustomer(req, res) {
         const { id } = req.params
         const customer = await db.query(`
                 SELECT 
+                    id,
                     name,
                     phone,
                     cpf,
-                    TO_CHAR(birthday, 'YYYY-MM-DD')
+                    TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday
                 FROM 
                     customers 
                 WHERE 
