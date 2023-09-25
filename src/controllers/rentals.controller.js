@@ -66,7 +66,7 @@ async function postRental(req, res) {
 
         if (rentedGamesbyId.rows.length == 0
             || customer.rows.length == 0
-            || Number(stockTotal) - Number(rentedGamesbyId.rows.length) <= 0) {
+            || stockTotal <= 0) {
             return res.sendStatus(400);
         }
 
