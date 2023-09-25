@@ -65,7 +65,7 @@ async function postRental(req, res) {
 
         if (rentedGame.rows.length == 0
             || customer.rows.length == 0
-            || stockTotal < 1) {
+            || stockTotal <= 0) {
             return res.sendStatus(400);
         }
 

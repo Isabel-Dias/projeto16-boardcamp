@@ -4,8 +4,15 @@ import { customerSchema } from "../schemas/customer.schema.js";
 async function getCustomers(req, res) {
     try {
         const customersList = await db.query(`
-                SELECT * FROM customers;
+                SELECT 
+                    name,
+                    phone,
+                    cpf,
+                    TO_CHAR(birthday, 'YYYY-MM-DD')
+                FROM 
+                    customers;
             `)
+            
         return res.status(200).send(customersList.rows);
 
     } catch {
@@ -17,7 +24,15 @@ async function getOneCustomer(req, res) {
     try {
         const { id } = req.params
         const customer = await db.query(`
-                SELECT * FROM customers WHERE id = $1;
+                SELECT 
+                    name,
+                    phone,
+                    cpf,
+                    TO_CHAR(birthday, 'YYYY-MM-DD')
+                FROM 
+                    customers 
+                WHERE 
+                    id = $1;
             `, [id])
 
         if (customer.rows.length == 0) {
