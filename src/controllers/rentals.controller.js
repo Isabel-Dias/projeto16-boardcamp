@@ -104,14 +104,13 @@ async function postRental(req, res) {
 }
 
 function calculateFee (startDate, endDate, daysRented, pricePerDay){
-    const date1 = startDate;
-    const date2 = endDate;
+    const date1 = dayjs(startDate);
+    const date2 = dayjs(endDate);
 
-    const timeDifference = date2 - date1;
-    const daysPassed = timeDifference / (24 * 60 * 60 * 1000);
+    const daysPassed = date2.diff(date1, "d");
     const delayFee = null
 
-    if (daysRented - daysPassed < 0){
+    if (daysRented - Number(daysPassed) < 0){
         return delayFee = ((daysRented - daysPassed) * -1) * pricePerDay
     } 
     return delayFee;
