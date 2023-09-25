@@ -74,7 +74,7 @@ async function postCustomer(req, res) {
     }
 }
 
-async function putCustomer(req, res) {
+async function updateCustomer(req, res) {
     try {
         const { id } = req.params
         const { name, phone, cpf, birthday } = req.body;
@@ -86,8 +86,11 @@ async function putCustomer(req, res) {
 
         const idByCpf = await db.query(
             `SELECT id FROM customers WHERE cpf = $1`, [cpf])
-
-        if (id != idByCpf.rows[0].id) return res.sendStatus(409);
+            console.log(idByCpf.rows[0].id);
+            console.log(id);
+        if (id !== idByCpf.rows[0].id) {
+            return res.sendStatus(409);
+        }
 
         await db.query(
             `UPDATE customers SET 
@@ -105,4 +108,4 @@ async function putCustomer(req, res) {
     }
 }
 
-export { getCustomers, getOneCustomer, postCustomer, putCustomer };
+export { getCustomers, getOneCustomer, postCustomer, updateCustomer };

@@ -53,7 +53,7 @@ async function postRental(req, res) {
             return res.status(400).send("Todos os campos são obrigatórios e o número mínimo de dias de aluguel é 1")
         }
 
-        const rentedGame = await db.query(
+        const rentedGamesbyId = await db.query(
             `SELECT * FROM games WHERE id = $1`, [gameId]
         )
 
@@ -61,11 +61,12 @@ async function postRental(req, res) {
             `SELECT * FROM customers WHERE id = $1`, [customerId]
         )
 
-        const { stockTotal, pricePerDay } = rentedGame.rows[0]
+        const { stockTotal, pricePerDay } = rentedGamesbyId.rows[0]
 
-        if (rentedGame.rows.length == 0
+
+        if (rentedGamesbyId.rows.length == 0
             || customer.rows.length == 0
-            || stockTotal <= 0) {
+            || Number(stockTotal) - Number(rentedGamesbyId.rows.length) <= 0) {
             return res.sendStatus(400);
         }
 
