@@ -8,4 +8,6 @@ const db = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+if (process.env.NODE_ENV === "production") configDatabase.ssl = true;
+
 export default db;
