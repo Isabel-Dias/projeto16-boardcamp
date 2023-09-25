@@ -24,7 +24,7 @@ async function postGames(req, res) {
             `SELECT name FROM games WHERE name = $1`, [name])
 
          
-       if (nameAlreadyExists.rows.length>0) return res.sendStatus(409)
+       if (nameAlreadyExists.rows.length > 0) return res.sendStatus(409)
         
         await db.query(`
             INSERT INTO games 
@@ -40,19 +40,3 @@ async function postGames(req, res) {
 }
 
 export {getGames, postGames};
-
-let mock = [{
-    id: 1,
-    name: 'Banco Imobiliário',
-    image: 'http://',
-    stockTotal: 3,
-    pricePerDay: 1500,
-  },
-  {
-    id: 2,
-    name: 'Banco liário',
-    image: 'http://',
-    stockTotal: 2,
-    pricePerDay: 666,
-  }
-]
