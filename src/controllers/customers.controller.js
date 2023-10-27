@@ -85,10 +85,10 @@ async function updateCustomer(req, res) {
         }
 
         const idByCpf = await db.query(
-            `SELECT id FROM customers WHERE cpf = $1`, [cpf])
-            console.log(idByCpf.rows[0].id);
-            console.log(id);
-        if (id !== idByCpf.rows[0].id) {
+            `SELECT id FROM customers WHERE cpf = $1`, [cpf]
+        )
+
+        if (id != Number(idByCpf.rows[0].id)) {
             return res.sendStatus(409);
         }
 
@@ -101,6 +101,7 @@ async function updateCustomer(req, res) {
             WHERE id = $5`,
             [name, phone, cpf, birthday, id]
         ) 
+        
         return res.sendStatus(200);
         
     } catch {
