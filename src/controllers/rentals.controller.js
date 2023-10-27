@@ -53,7 +53,7 @@ async function postRental(req, res) {
             return res.status(400).send("Todos os campos são obrigatórios e o número mínimo de dias de aluguel é 1")
         }
 
-        const rentedGamesbyId = await db.query(
+        const rentedGamebyId = await db.query(
             `SELECT * FROM games WHERE id = $1`, [gameId]
         )
 
@@ -61,12 +61,16 @@ async function postRental(req, res) {
             `SELECT * FROM customers WHERE id = $1`, [customerId]
         )
 
-        const { stockTotal, pricePerDay } = rentedGamesbyId.rows[0]
+        const { stockTotal, pricePerDay } = rentedGamebyId.rows[0]
+        const updatedStock = Number(stockTotal) - 1;
 
 
-        if (rentedGamesbyId.rows.length == 0
-            || customer.rows.length == 0
-            || stockTotal <= 0) {
+        if (rentedGamebyId.rows.length == 0
+            || customer.rows.length == 0) {
+            return res.sendStatus(400);
+        }
+
+        if (stockTotal == 0) {
             return res.sendStatus(400);
         }
 
@@ -96,6 +100,16 @@ async function postRental(req, res) {
         ]
         )
 
+        await db.query(
+            `UPDATE 
+                games
+            SET
+                "stockTotal" = $1
+            WHERE
+                id = $2`,
+            [updatedStock, gameId]
+        )
+
         return res.sendStatus(201);
 
     } catch {
@@ -106,17 +120,15 @@ async function postRental(req, res) {
 function calculateFee (startDate, endDate, daysRented, pricePerDay){
     const date1 = dayjs(startDate);
     const date2 = dayjs(endDate);
-    console.log(date1);
-    console.log(date2);
-
+    
     const daysPassed = date2.diff(date1, "d");
     const delayFee = null
-    console.log(daysPassed);
+    
 
     if (daysRented - Number(daysPassed) < 0){
         return delayFee = ((daysRented - daysPassed) * -1) * pricePerDay
     } 
-    console.log(delayFee);
+    
     return delayFee;
 }
 
