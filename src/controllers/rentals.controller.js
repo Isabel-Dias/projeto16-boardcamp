@@ -148,21 +148,21 @@ async function rentalReturn(req, res) {
             WHERE
                 rentals.id = $1`, [id]
         )
-
+        
         if (rentalData.rows.length == 0) {
             return res.sendStatus(404);
         }
-       
+        
         const { pricePerDay, rentDate, daysRented, returnDate, stockTotal, gameId} = rentalData.rows[0]
         const startDate = rentDate.toISOString().split('T')[0]
         
         if (returnDate != null) {
            return res.sendStatus(400);
         }
-
+        
         const fee = calculateFee(startDate, dateNow, daysRented, pricePerDay)
-        updatedStock = Number(stockTotal) + 1
-
+        const updatedStock = Number(stockTotal) + 1
+        
         await db.query (
             `UPDATE
                 rentals
@@ -174,7 +174,7 @@ async function rentalReturn(req, res) {
                 [dateNow, fee, id]
             
         )
-
+      
         await db.query (
             `UPDATE
                 games
@@ -185,7 +185,7 @@ async function rentalReturn(req, res) {
                 [updatedStock, gameId]
             
         )
-
+    
         return res.sendStatus(200);
     } catch {
         return res.sendStatus(500);
