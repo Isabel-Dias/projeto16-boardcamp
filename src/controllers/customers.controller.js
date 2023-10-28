@@ -83,30 +83,30 @@ async function updateCustomer(req, res) {
         if (validationSchema.error) {
             return res.status(400).send("Todos os campos são obrigatórios")
         }
-        
         const idByCpf = await db.query(
             `SELECT id FROM customers WHERE cpf = $1`, [cpf]
         )
-
-        if (Number(idByCpf.rows[0].id) != id) {
-            return res.sendStatus(409)
-        }
-
-        await db.query(
-            `UPDATE 
-                customers 
-            SET 
-                name = $1,
-                phone = $2,
-                cpf = $3,
-                birthday = $4
-            WHERE 
-                id = $5`,
-            [name, phone, cpf, birthday, id]
-        ) 
+            console.log(idByCpf.rows.length, "a");
+        if(idByCpf.rows.length == 0 || idByCpf.rows[0].id == id){
+            await db.query(
+                `UPDATE 
+                    customers 
+                SET 
+                    name = $1,
+                    phone = $2,
+                    cpf = $3,
+                    birthday = $4
+                WHERE 
+                    id = $5`,
+                [name, phone, cpf, birthday, id]
+            ) 
         
         return res.sendStatus(200);
-        
+        }
+
+        if (idByCpf.rows[0].id != id) {
+            return res.sendStatus(409)
+        }
     } catch {
         return res.sendStatus(500);
     }
