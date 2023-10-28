@@ -121,14 +121,13 @@ function calculateFee (startDate, endDate, daysRented, pricePerDay){
     const date1 = dayjs(startDate);
     const date2 = dayjs(endDate);
     
-    const daysPassed = date2.diff(date1, "d");
-    const delayFee = 0
+    let daysPassed = date2.diff(date1, "d");
+    let delayFee = null
     
-
-    if (daysRented - Number(daysPassed) < 0){
+    if (Number(daysRented) - Number(daysPassed) < 0){
+        
         return delayFee = ((daysRented - daysPassed) * -1) * pricePerDay
     } 
-    
     return delayFee;
 }
 
@@ -155,14 +154,15 @@ async function rentalReturn(req, res) {
         
         const { pricePerDay, rentDate, daysRented, returnDate, stockTotal, gameId} = rentalData.rows[0]
         const startDate = rentDate.toISOString().split('T')[0]
-        
+
         if (returnDate != null) {
            return res.sendStatus(400);
         }
-        
+
         const fee = calculateFee(startDate, dateNow, daysRented, pricePerDay)
         const updatedStock = Number(stockTotal) + 1
         
+        console.log(fee);
         await db.query (
             `UPDATE
                 rentals
