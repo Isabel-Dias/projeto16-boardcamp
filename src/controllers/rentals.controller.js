@@ -161,8 +161,7 @@ async function rentalReturn(req, res) {
 
         const fee = calculateFee(startDate, dateNow, daysRented, pricePerDay)
         const updatedStock = Number(stockTotal) + 1
-        
-        console.log(fee);
+    
         await db.query (
             `UPDATE
                 rentals
