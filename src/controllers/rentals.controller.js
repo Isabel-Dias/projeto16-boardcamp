@@ -122,7 +122,7 @@ function calculateFee (startDate, endDate, daysRented, pricePerDay){
     const date2 = dayjs(endDate);
     
     const daysPassed = date2.diff(date1, "d");
-    const delayFee = null
+    const delayFee = 0
     
 
     if (daysRented - Number(daysPassed) < 0){

@@ -86,7 +86,7 @@ async function updateCustomer(req, res) {
         const idByCpf = await db.query(
             `SELECT id FROM customers WHERE cpf = $1`, [cpf]
         )
-            console.log(idByCpf.rows.length, "a");
+            
         if(idByCpf.rows.length == 0 || idByCpf.rows[0].id == id){
             await db.query(
                 `UPDATE 
