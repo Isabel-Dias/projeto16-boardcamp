@@ -140,8 +140,7 @@ async function rentalReturn(req, res) {
         const rentalData = await db.query (
             `SELECT
                 rentals.*,
-                games."pricePerDay",
-                games."stockTotal"
+                games.*
             FROM
                 rentals
             JOIN
