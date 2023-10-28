@@ -87,10 +87,6 @@ async function updateCustomer(req, res) {
         const idByCpf = await db.query(
             `SELECT id FROM customers WHERE cpf = $1`, [cpf]
         )
-        
-        if (idByCpf.rows.length == 0) {
-            return res.sendStatus(409);
-        }
 
         if (Number(idByCpf.rows[0].id) != id) {
             return res.sendStatus(409)
