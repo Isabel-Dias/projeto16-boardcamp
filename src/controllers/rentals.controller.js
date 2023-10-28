@@ -70,7 +70,7 @@ async function postRental(req, res) {
             return res.sendStatus(400);
         }
 
-        if (stockTotal == 0) {
+        if (Number(stockTotal) == 0) {
             return res.sendStatus(400);
         }
 
@@ -140,7 +140,8 @@ async function rentalReturn(req, res) {
         const rentalData = await db.query (
             `SELECT
                 rentals.*,
-                games."pricePerDay"
+                games."pricePerDay",
+                games."stockTotal"
             FROM
                 rentals
             JOIN
@@ -153,7 +154,7 @@ async function rentalReturn(req, res) {
             return res.sendStatus(404);
         }
        
-        const { pricePerDay, rentDate, daysRented, returnDate} = rentalData.rows[0]
+        const { pricePerDay, rentDate, daysRented, returnDate, stockTotal, gameId} = rentalData.rows[0]
         const startDate = rentDate.toISOString().split('T')[0]
         
         if (returnDate != null) {
@@ -161,6 +162,7 @@ async function rentalReturn(req, res) {
         }
 
         const fee = calculateFee(startDate, dateNow, daysRented, pricePerDay)
+        updatedStock = Number(stockTotal) + 1
 
         await db.query (
             `UPDATE
@@ -171,6 +173,17 @@ async function rentalReturn(req, res) {
             WHERE
                 id = $3`,
                 [dateNow, fee, id]
+            
+        )
+
+        await db.query (
+            `UPDATE
+                games
+            SET
+                "stockTotal" = $1
+            WHERE
+                id = $2`,
+                [updatedStock, gameId]
             
         )
 
